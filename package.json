@@ -1,6 +1,6 @@
 {
     "id": "ua-markdown",
-    "name": "uniapp markdown语法渲染及代码高亮",
+    "name": "uniapp-markdown-render",
     "displayName": "uniapp markdown语法渲染及代码高亮",
     "version": "1.2.4",
     "description": "基于uniapp+vue3自定义解析markdown语法/高亮，适用于h5+小程序+App端。",
@@ -9,10 +9,23 @@
         "uni-markdown",
         "markdown"
     ],
+    "scripts": {
+        "dev:h5": "cross-env NODE_ENV=development UNI_PLATFORM=h5 vue-cli-service uni-serve",
+        "build:h5": "cross-env NODE_ENV=production UNI_PLATFORM=h5 vue-cli-service uni-build",
+        "dev:mp-weixin": "cross-env NODE_ENV=development UNI_PLATFORM=mp-weixin vue-cli-service uni-build --watch"
+    },
     "dcloudext": {
         "category": [
             "前端组件",
             "通用组件"
         ]
+    },
+    "devDependencies": {
+        "@dcloudio/uni-cli-i18n": "^2.0.2-4050620250311002",
+        "@dcloudio/uni-cli-shared": "^2.0.2-4050620250311002",
+        "@dcloudio/vue-cli-plugin-uni": "^2.0.2-4050620250311002",
+        "@dcloudio/webpack-uni-pages-loader": "^2.0.2-4050620250311002",
+        "@vue/cli-service": "^5.0.8",
+        "cross-env": "^7.0.3"
     }
 }
