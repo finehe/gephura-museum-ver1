@@ -1,68 +1,91 @@
 <template>
-  <view class="ios-home-container">
+  <view class="home-container">
     <!-- 顶部导航栏 -->
-    <view class="ios-header">
-      <image src="/static/logo.png" class="ios-logo" mode="aspectFit"></image>
-      <view class="ios-location">
-        <text class="ios-location-icon">📍</text>
-        <text class="ios-location-text">{{ city }}</text>
+    <view class="header">
+      <image src="/static/logo.png" class="logo" mode="aspectFit"></image>
+      <view class="location">
+        <text class="location-icon">📍</text>
+        <text class="location-text">{{ city }}</text>
       </view>
-      <view class="ios-header-button" @click="toggleSidebar">
-        <text class="ios-header-button-icon">☰</text>
+      <view class="header-button" @click="toggleSidebar">
+        <text class="header-button-icon">☰</text>
       </view>
     </view>
     
     <!-- 欢迎卡片 -->
-    <ios-card class="ios-welcome-card">
-      <view class="ios-welcome-content">
-        <image src="/static/large-logo.png" class="ios-avatar" mode="aspectFit"></image>
-        <text class="ios-welcome-title">Hi，我是你的导游助手</text>
-        <text class="ios-welcome-description">
+    <base-card class="welcome-card" shadow hover>
+      <template #header>
+        <view class="welcome-header">
+          <text class="welcome-title">欢迎来到格普拉博物馆</text>
+        </view>
+      </template>
+      <view class="welcome-content">
+        <image src="/static/large-logo.png" class="avatar" mode="aspectFit"></image>
+        <text class="welcome-subtitle">Hi，我是你的导游助手</text>
+        <text class="welcome-description">
           我精通博物馆、植物馆、动物园、天体、物理、文化、体育、古今中外...
         </text>
+        <base-button class="start-button" type="primary" @click="startExploring">开始探索</base-button>
       </view>
-    </ios-card>
+    </base-card>
     
     <!-- 功能卡片 -->
-    <view class="ios-features-grid">
-      <ios-card class="ios-feature-card" @click="takePhoto">
-        <view class="ios-feature-content">
-          <image src="/static/photo-icon.png" class="ios-feature-icon" mode="aspectFit"></image>
-          <text class="ios-feature-title">拍一下</text>
-          <text class="ios-feature-description">拍照识别展品</text>
+    <view class="features-grid">
+      <base-card class="feature-card" shadow hover @click="takePhoto">
+        <view class="feature-content">
+          <image src="/static/photo-icon.png" class="feature-icon" mode="aspectFit"></image>
+          <text class="feature-title">拍一下</text>
+          <text class="feature-description">拍照识别展品</text>
         </view>
-      </ios-card>
+      </base-card>
       
-      <ios-card class="ios-feature-card" @click="scanCode">
-        <view class="ios-feature-content">
-          <image src="/static/scan-icon.png" class="ios-feature-icon" mode="aspectFit"></image>
-          <text class="ios-feature-title">扫一扫</text>
-          <text class="ios-feature-description">扫码了解详情</text>
+      <base-card class="feature-card" shadow hover @click="scanCode">
+        <view class="feature-content">
+          <image src="/static/scan-icon.png" class="feature-icon" mode="aspectFit"></image>
+          <text class="feature-title">扫一扫</text>
+          <text class="feature-description">扫码了解详情</text>
         </view>
-      </ios-card>
+      </base-card>
+    </view>
+    
+    <!-- 热门展览 -->
+    <view class="exhibitions-section">
+      <text class="section-title">热门展览</text>
+      <scroll-view scroll-x class="exhibitions-scroll">
+        <view class="exhibitions-container">
+          <base-card v-for="(exhibition, index) in exhibitions" :key="index" class="exhibition-card" shadow hover>
+            <view class="exhibition-content">
+              <image :src="exhibition.image" class="exhibition-image" mode="aspectFill"></image>
+              <view class="exhibition-info">
+                <text class="exhibition-title">{{ exhibition.title }}</text>
+                <text class="exhibition-date">{{ exhibition.date }}</text>
+              </view>
+            </view>
+          </base-card>
+        </view>
+      </scroll-view>
     </view>
     
     <!-- 侧边栏组件 -->
     <SidebarNav ref="sidebarNav" />
     
     <!-- 底部输入框 -->
-    <view class="ios-input-footer">
-      <view class="ios-input-mode-button" @click="toggleInputMode">
+    <view class="input-footer">
+      <view class="input-mode-button" @click="toggleInputMode">
         <text>{{ isVoiceMode ? '键盘' : '语音' }}</text>
       </view>
       
-      <view class="ios-input-field">
-        <input 
+      <view class="input-field">
+        <base-input 
           v-if="!isVoiceMode" 
-          type="text" 
           v-model="userInput" 
           placeholder="有什么想问的..." 
+          clearable
           @keyup.enter="handleTextInput"
-          class="ios-text-input"
         />
         <view 
           v-else 
-          class="ios-voice-button"
+          class="voice-button"
           @touchstart="startVoiceInput" 
           @touchend="endVoiceInput"
         >
@@ -70,13 +93,13 @@
         </view>
       </view>
       
-      <view class="ios-input-action">
-        <view v-if="userInput.trim()" class="ios-send-button" @click="sendTextMessage">
-          <text>发送</text>
-        </view>
-        <view v-else class="ios-more-button" @click="openMediaOptions">
-          <text>+</text>
-        </view>
+      <view class="input-action">
+        <base-button v-if="userInput.trim()" type="primary" round @click="sendTextMessage">
+          发送
+        </base-button>
+        <base-button v-else type="secondary" round @click="openMediaOptions">
+          +
+        </base-button>
       </view>
     </view>
   </view>
@@ -84,13 +107,17 @@
 
 <script>
 import SidebarNav from '@/components/SidebarNav.vue';
-import IosCard from '@/components/common/IosCard.vue';
+import BaseCard from '@/components/BaseCard.vue';
+import BaseButton from '@/components/BaseButton.vue';
+import BaseInput from '@/components/BaseInput.vue';
 import { initializeUser, uploadImage, sendDataToServer, startConversation } from '@/utils/api.js';
 
 export default {
   components: {
     SidebarNav,
-    IosCard
+    BaseCard,
+    BaseButton,
+    BaseInput
   },
   data() {
     return {
@@ -99,6 +126,23 @@ export default {
       uuid: '',
       userInput: '',
       isVoiceMode: false,
+      exhibitions: [
+        {
+          title: '古代文明展',
+          date: '2025.03.15 - 2025.06.15',
+          image: '/static/exhibition1.jpg'
+        },
+        {
+          title: '现代艺术展',
+          date: '2025.03.20 - 2025.07.10',
+          image: '/static/exhibition2.jpg'
+        },
+        {
+          title: '科技创新展',
+          date: '2025.04.01 - 2025.08.01',
+          image: '/static/exhibition3.jpg'
+        }
+      ]
     };
   },
   mounted() {
@@ -190,11 +234,9 @@ export default {
 
     // 逆地理编码
     reverseGeocoding(latitude, longitude) {
-      // #ifdef H5
-      // 使用高德地图 Web API 进行逆地理编码
-      const url = `https://restapi.amap.com/v3/geocode/regeo?key=aa167e521fc7617f0c0aba2a75fdba72&location=${longitude},${latitude}`;
+      // 简化版本，使用统一的API
       uni.request({
-        url: url,
+        url: `https://restapi.amap.com/v3/geocode/regeo?key=aa167e521fc7617f0c0aba2a75fdba72&location=${longitude},${latitude}`,
         success: (res) => {
           if (res.data.status === '1' && res.data.regeocode) {
             this.city = res.data.regeocode.addressComponent.city || res.data.regeocode.addressComponent.province;
@@ -204,41 +246,14 @@ export default {
           this.city = '无法获取城市信息';
         }
       });
-      // #endif
-
-      // #ifdef APP-PLUS
-      plus.geolocation.getCurrentPosition(
-        (position) => {
-          if (position.address) {
-            this.city = position.address.city || position.address.province;
-          }
-        },
-        (error) => {
-          console.error('APP逆地理编码错误:', error);
-          this.city = '无法获取城市信息';
-        },
-        { geocode: true }
-      );
-      // #endif
-
-      // #ifdef MP-WEIXIN
-      wx.reverseGeocoder({
-        location: {
-          latitude: latitude,
-          longitude: longitude
-        },
-        success: (res) => {
-          if (res.result && res.result.address_component) {
-            this.city = res.result.address_component.city || res.result.address_component.province;
-          }
-        },
-        fail: (error) => {
-          console.error('微信小程序逆地理编码错误:', error);
-          this.city = '无法获取城市信息';
-        }
-      });
-      // #endif
     },
+    
+    startExploring() {
+      uni.navigateTo({
+        url: '/pages/talk/talk'
+      });
+    },
+    
     takePhoto() {
       uni.chooseImage({
         count: 1,
@@ -249,270 +264,342 @@ export default {
         }
       });
     },
+    
     scanCode() {
       uni.scanCode({
         success: (res) => {
-          sendDataToServer(res.result, this.uid, this.uuid, this.openTalkPage);
+          console.log('扫码结果:', res);
+          if (res.result) {
+            this.handleScanResult(res.result);
+          }
         }
       });
     },
-    openTalkPage(data) {
-      if (!data) {
-        console.error('Data is null or undefined');
-        return;
-      }
-      try {
-        const parsedData = JSON.parse(data);
-        const chatGroupId = parsedData.chatGroupId;
-        uni.setStorageSync(`conversation_${chatGroupId}`, data);
-        uni.navigateTo({
-          url: `/pages/talk/talk?chatGroupId=${chatGroupId}`
-        });
-      } catch (error) {
-        console.error('Failed to parse data:', error);
-      }
+    
+    handleScanResult(result) {
+      // 处理扫码结果
+      startConversation(result, this.uid, this.uuid, this.openTalkPage);
     },
+    
+    openTalkPage(conversationId) {
+      uni.navigateTo({
+        url: `/pages/talk/talk?id=${conversationId}`
+      });
+    },
+    
     toggleSidebar() {
-      this.$refs.sidebarNav.toggleSidebar();
+      this.$refs.sidebarNav.toggle();
     },
+    
     toggleInputMode() {
       this.isVoiceMode = !this.isVoiceMode;
     },
-    handleTextInput() {
+    
+    handleTextInput(e) {
       if (this.userInput.trim()) {
         this.sendTextMessage();
       }
     },
+    
     sendTextMessage() {
-      console.log('Sending message:', this.userInput);
-      startConversation(this.uid, this.uuid, this.userInput)
-        .then(data => {
-          if (data.code === 200) {
-            console.log('Conversation started:', data);
-            this.openTalkPage(JSON.stringify(data.data));
-          } else {
-            console.error('Failed to start conversation:', data.data);
-          }
-        })
-        .catch(error => {
-          console.error('Error starting conversation:', error);
-        });
-      this.userInput = '';
+      if (this.userInput.trim()) {
+        startConversation(this.userInput, this.uid, this.uuid, this.openTalkPage);
+        this.userInput = '';
+      }
     },
+    
     startVoiceInput() {
-      console.log('开始录音...');
+      console.log('开始语音输入');
+      // 实现语音输入逻辑
     },
+    
     endVoiceInput() {
-      console.log('结束录音...');
+      console.log('结束语音输入');
+      // 实现语音输入结束逻辑
     },
+    
     openMediaOptions() {
-      console.log('打开多媒体选项...');
+      uni.showActionSheet({
+        itemList: ['拍照', '从相册选择', '扫一扫'],
+        success: (res) => {
+          switch (res.tapIndex) {
+            case 0:
+              this.takePhoto();
+              break;
+            case 1:
+              this.chooseFromAlbum();
+              break;
+            case 2:
+              this.scanCode();
+              break;
+          }
+        }
+      });
     },
+    
+    chooseFromAlbum() {
+      uni.chooseImage({
+        count: 1,
+        sourceType: ['album'],
+        success: (res) => {
+          const filePath = res.tempFilePaths[0];
+          uploadImage(filePath, this.uid, this.uuid, this.openTalkPage);
+        }
+      });
+    }
   }
 }
 </script>
 
 <style lang="scss">
-.ios-home-container {
+@import '@/uni.scss';
+
+.home-container {
   display: flex;
   flex-direction: column;
-  background-color: var(--background-color);
   min-height: 100vh;
-  padding-bottom: 80px;
+  background-color: $bg-secondary;
+  padding-bottom: 80px; // 为底部输入框留出空间
 }
 
-.ios-header {
+.header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 16px;
-  background-color: white;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  padding: $spacing-4;
+  background-color: $bg-primary;
+  box-shadow: $shadow-sm;
+  position: sticky;
+  top: 0;
+  z-index: $z-30;
 }
 
-.ios-logo {
-  width: 70px;
+.logo {
+  width: 120px;
   height: 40px;
 }
 
-.ios-location {
+.location {
   display: flex;
   align-items: center;
-  background-color: var(--background-color);
-  padding: 4px 10px;
-  border-radius: var(--border-radius-full);
+  background-color: $bg-tertiary;
+  padding: $spacing-1 $spacing-2;
+  border-radius: $radius-full;
 }
 
-.ios-location-icon {
-  font-size: 16px;
-  margin-right: 4px;
+.location-icon {
+  margin-right: $spacing-1;
 }
 
-.ios-location-text {
-  font-size: var(--font-size-small);
-  color: var(--text-secondary);
+.location-text {
+  font-size: $text-sm;
+  color: $text-secondary;
 }
 
-.ios-header-button {
-  width: 36px;
-  height: 36px;
+.header-button {
+  width: 40px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: var(--border-radius-full);
+  border-radius: $radius-full;
+  background-color: $bg-tertiary;
+  
+  &:active {
+    background-color: darken($bg-tertiary, 5%);
+  }
 }
 
-.ios-header-button-icon {
-  font-size: 20px;
-  color: var(--text-primary);
+.welcome-card {
+  margin: $spacing-4;
 }
 
-.ios-welcome-card {
-  margin: var(--spacing-medium);
+.welcome-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
-.ios-welcome-content {
+.welcome-title {
+  font-size: $text-xl;
+  font-weight: $font-bold;
+  color: $text-primary;
+}
+
+.welcome-content {
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
 }
 
-.ios-avatar {
-  width: 80px;
-  height: 80px;
-  border-radius: var(--border-radius-full);
-  margin-bottom: var(--spacing-medium);
+.avatar {
+  width: 100px;
+  height: 100px;
+  border-radius: $radius-full;
+  margin-bottom: $spacing-4;
 }
 
-.ios-welcome-title {
-  font-size: var(--font-size-large);
-  font-weight: 600;
-  color: var(--text-primary);
-  margin-bottom: var(--spacing-small);
+.welcome-subtitle {
+  font-size: $text-lg;
+  font-weight: $font-semibold;
+  color: $text-primary;
+  margin-bottom: $spacing-2;
 }
 
-.ios-welcome-description {
-  font-size: var(--font-size-normal);
-  color: var(--text-secondary);
-  line-height: 1.4;
+.welcome-description {
+  font-size: $text-base;
+  color: $text-secondary;
+  margin-bottom: $spacing-4;
+  line-height: $leading-relaxed;
 }
 
-.ios-features-grid {
-  display: flex;
-  flex-wrap: wrap;
-  padding: 0 var(--spacing-medium);
-  gap: var(--spacing-medium);
+.start-button {
+  width: 80%;
 }
 
-.ios-feature-card {
-  flex: 1;
-  min-width: calc(50% - var(--spacing-medium));
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: $spacing-4;
+  padding: 0 $spacing-4;
+  margin-bottom: $spacing-6;
 }
 
-.ios-feature-content {
+.feature-card {
+  height: 100%;
+}
+
+.feature-content {
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
+  padding: $spacing-2;
 }
 
-.ios-feature-icon {
+.feature-icon {
   width: 60px;
   height: 60px;
-  margin-bottom: var(--spacing-small);
+  margin-bottom: $spacing-2;
 }
 
-.ios-feature-title {
-  font-size: var(--font-size-normal);
-  font-weight: 600;
-  color: var(--text-primary);
-  margin-bottom: 4px;
+.feature-title {
+  font-size: $text-lg;
+  font-weight: $font-semibold;
+  color: $text-primary;
+  margin-bottom: $spacing-1;
 }
 
-.ios-feature-description {
-  font-size: var(--font-size-small);
-  color: var(--text-secondary);
+.feature-description {
+  font-size: $text-sm;
+  color: $text-secondary;
 }
 
-.ios-input-footer {
+.exhibitions-section {
+  padding: 0 $spacing-4;
+  margin-bottom: $spacing-6;
+}
+
+.section-title {
+  font-size: $text-xl;
+  font-weight: $font-bold;
+  color: $text-primary;
+  margin-bottom: $spacing-4;
+}
+
+.exhibitions-scroll {
+  width: 100%;
+}
+
+.exhibitions-container {
+  display: flex;
+  padding: $spacing-2 0;
+}
+
+.exhibition-card {
+  width: 250px;
+  margin-right: $spacing-4;
+  flex-shrink: 0;
+}
+
+.exhibition-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.exhibition-image {
+  width: 100%;
+  height: 150px;
+  border-radius: $radius-md;
+  margin-bottom: $spacing-2;
+}
+
+.exhibition-info {
+  padding: $spacing-2;
+}
+
+.exhibition-title {
+  font-size: $text-base;
+  font-weight: $font-semibold;
+  color: $text-primary;
+  margin-bottom: $spacing-1;
+}
+
+.exhibition-date {
+  font-size: $text-sm;
+  color: $text-tertiary;
+}
+
+.input-footer {
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
   display: flex;
   align-items: center;
-  padding: 10px var(--spacing-medium);
-  background-color: white;
-  border-top: 1px solid rgba(0, 0, 0, 0.05);
-  z-index: 100;
+  padding: $spacing-3;
+  background-color: $bg-primary;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+  z-index: $z-40;
 }
 
-.ios-input-mode-button {
-  width: 36px;
-  height: 36px;
+.input-mode-button {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-right: var(--spacing-small);
-  color: var(--text-secondary);
+  width: 40px;
+  height: 40px;
+  border-radius: $radius-full;
+  background-color: $bg-tertiary;
+  margin-right: $spacing-2;
+  
+  &:active {
+    background-color: darken($bg-tertiary, 5%);
+  }
 }
 
-.ios-input-field {
+.input-field {
   flex: 1;
-  background-color: var(--background-color);
-  border-radius: var(--border-radius-full);
-  overflow: hidden;
+  margin-right: $spacing-2;
 }
 
-.ios-text-input {
+.voice-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 100%;
-  height: 36px;
-  padding: 0 var(--spacing-medium);
-  font-size: var(--font-size-normal);
-  border: none;
-  background-color: transparent;
+  height: 40px;
+  border-radius: $radius-md;
+  background-color: $bg-tertiary;
+  color: $text-secondary;
+  
+  &:active {
+    background-color: darken($bg-tertiary, 5%);
+  }
 }
 
-.ios-voice-button {
-  width: 100%;
-  height: 36px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: var(--font-size-normal);
-  color: var(--text-secondary);
-}
-
-.ios-input-action {
-  width: 36px;
-  height: 36px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-left: var(--spacing-small);
-}
-
-.ios-send-button {
-  width: 36px;
-  height: 36px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: var(--primary-color);
-  color: white;
-  border-radius: var(--border-radius-full);
-}
-
-.ios-more-button {
-  width: 36px;
-  height: 36px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: var(--background-color);
-  color: var(--text-secondary);
-  border-radius: var(--border-radius-full);
-  font-size: 24px;
+.input-action {
+  width: 40px;
 }
 </style> 

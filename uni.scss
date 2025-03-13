@@ -12,65 +12,277 @@
  * 如果你的项目同样使用了scss预处理，你也可以直接在你的 scss 代码中使用如下变量，同时无需 import 这个文件
  */
 
+/* 设计系统 - 颜色 */
+$primary-color: #3B82F6; // 主色调 - 蓝色
+$secondary-color: #10B981; // 辅助色 - 绿色
+$accent-color: #8B5CF6; // 强调色 - 紫色
+$danger-color: #EF4444; // 危险色 - 红色
+$warning-color: #F59E0B; // 警告色 - 橙色
+$success-color: #10B981; // 成功色 - 绿色
+$info-color: #3B82F6; // 信息色 - 蓝色
+
+/* 中性色 */
+$gray-50: #F9FAFB;
+$gray-100: #F3F4F6;
+$gray-200: #E5E7EB;
+$gray-300: #D1D5DB;
+$gray-400: #9CA3AF;
+$gray-500: #6B7280;
+$gray-600: #4B5563;
+$gray-700: #374151;
+$gray-800: #1F2937;
+$gray-900: #111827;
+
+/* 背景色 */
+$bg-primary: #FFFFFF;
+$bg-secondary: $gray-50;
+$bg-tertiary: $gray-100;
+
+/* 文本色 */
+$text-primary: $gray-900;
+$text-secondary: $gray-700;
+$text-tertiary: $gray-500;
+$text-disabled: $gray-400;
+
+/* 边框色 */
+$border-light: $gray-200;
+$border-medium: $gray-300;
+$border-dark: $gray-400;
+
+/* 阴影 */
+$shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+$shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+$shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+$shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+
+/* 圆角 */
+$radius-sm: 0.125rem;
+$radius-md: 0.25rem;
+$radius-lg: 0.5rem;
+$radius-xl: 1rem;
+$radius-full: 9999px;
+
+/* 间距 */
+$spacing-1: 0.25rem;
+$spacing-2: 0.5rem;
+$spacing-3: 0.75rem;
+$spacing-4: 1rem;
+$spacing-5: 1.25rem;
+$spacing-6: 1.5rem;
+$spacing-8: 2rem;
+$spacing-10: 2.5rem;
+$spacing-12: 3rem;
+$spacing-16: 4rem;
+$spacing-20: 5rem;
+$spacing-24: 6rem;
+$spacing-32: 8rem;
+$spacing-40: 10rem;
+$spacing-48: 12rem;
+$spacing-56: 14rem;
+$spacing-64: 16rem;
+
+/* 字体 */
+$font-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+$font-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+$font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+
+/* 字体大小 */
+$text-xs: 0.75rem;
+$text-sm: 0.875rem;
+$text-base: 1rem;
+$text-lg: 1.125rem;
+$text-xl: 1.25rem;
+$text-2xl: 1.5rem;
+$text-3xl: 1.875rem;
+$text-4xl: 2.25rem;
+$text-5xl: 3rem;
+$text-6xl: 3.75rem;
+
+/* 字体粗细 */
+$font-thin: 100;
+$font-extralight: 200;
+$font-light: 300;
+$font-normal: 400;
+$font-medium: 500;
+$font-semibold: 600;
+$font-bold: 700;
+$font-extrabold: 800;
+$font-black: 900;
+
+/* 行高 */
+$leading-none: 1;
+$leading-tight: 1.25;
+$leading-snug: 1.375;
+$leading-normal: 1.5;
+$leading-relaxed: 1.625;
+$leading-loose: 2;
+
+/* 过渡 */
+$transition-fast: 150ms;
+$transition-normal: 300ms;
+$transition-slow: 500ms;
+
+/* Z-index */
+$z-0: 0;
+$z-10: 10;
+$z-20: 20;
+$z-30: 30;
+$z-40: 40;
+$z-50: 50;
+$z-auto: auto;
+
+/* 混合宏 - 弹性布局 */
+@mixin flex($direction: row, $justify: flex-start, $align: stretch, $wrap: nowrap) {
+  display: flex;
+  flex-direction: $direction;
+  justify-content: $justify;
+  align-items: $align;
+  flex-wrap: $wrap;
+}
+
+/* 混合宏 - 网格布局 */
+@mixin grid($columns: 1, $gap: $spacing-4) {
+  display: grid;
+  grid-template-columns: repeat($columns, minmax(0, 1fr));
+  gap: $gap;
+}
+
+/* 混合宏 - 响应式 */
+@mixin responsive($breakpoint) {
+  @if $breakpoint == sm {
+    @media (min-width: 640px) { @content; }
+  } @else if $breakpoint == md {
+    @media (min-width: 768px) { @content; }
+  } @else if $breakpoint == lg {
+    @media (min-width: 1024px) { @content; }
+  } @else if $breakpoint == xl {
+    @media (min-width: 1280px) { @content; }
+  } @else if $breakpoint == 2xl {
+    @media (min-width: 1536px) { @content; }
+  }
+}
+
+/* 混合宏 - 按钮 */
+@mixin button($bg-color: $primary-color, $text-color: white, $hover-darken: 10%) {
+  background-color: $bg-color;
+  color: $text-color;
+  padding: $spacing-2 $spacing-4;
+  border-radius: $radius-md;
+  font-weight: $font-medium;
+  transition: background-color $transition-fast ease-in-out;
+  
+  &:hover {
+    background-color: darken($bg-color, $hover-darken);
+  }
+  
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba($bg-color, 0.4);
+  }
+  
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+/* 混合宏 - 卡片 */
+@mixin card($padding: $spacing-4, $bg-color: $bg-primary, $border: true) {
+  background-color: $bg-color;
+  padding: $padding;
+  border-radius: $radius-lg;
+  box-shadow: $shadow-md;
+  
+  @if $border {
+    border: 1px solid $border-light;
+  }
+}
+
+/* 混合宏 - 输入框 */
+@mixin input {
+  width: 100%;
+  padding: $spacing-2 $spacing-3;
+  border: 1px solid $border-medium;
+  border-radius: $radius-md;
+  background-color: $bg-primary;
+  color: $text-primary;
+  transition: border-color $transition-fast ease-in-out, box-shadow $transition-fast ease-in-out;
+  
+  &:focus {
+    outline: none;
+    border-color: $primary-color;
+    box-shadow: 0 0 0 3px rgba($primary-color, 0.2);
+  }
+  
+  &::placeholder {
+    color: $text-tertiary;
+  }
+  
+  &:disabled {
+    background-color: $bg-tertiary;
+    cursor: not-allowed;
+  }
+}
+
 /* 颜色变量 */
 
 /* 行为相关颜色 */
-$uni-color-primary: #007aff;
-$uni-color-success: #4cd964;
-$uni-color-warning: #f0ad4e;
-$uni-color-error: #dd524d;
+$uni-color-primary: $primary-color;
+$uni-color-success: $success-color;
+$uni-color-warning: $warning-color;
+$uni-color-error: $danger-color;
 
 /* 文字基本颜色 */
-$uni-text-color:#333;//基本色
-$uni-text-color-inverse:#fff;//反色
-$uni-text-color-grey:#999;//辅助灰色，如加载更多的提示信息
-$uni-text-color-placeholder: #808080;
-$uni-text-color-disable:#c0c0c0;
+$uni-text-color: $text-primary;
+$uni-text-color-inverse: #fff;
+$uni-text-color-grey: $text-secondary;
+$uni-text-color-placeholder: $text-tertiary;
+$uni-text-color-disable: $text-disabled;
 
 /* 背景颜色 */
-$uni-bg-color:#ffffff;
-$uni-bg-color-grey:#f8f8f8;
-$uni-bg-color-hover:#f1f1f1;//点击状态颜色
-$uni-bg-color-mask:rgba(0, 0, 0, 0.4);//遮罩颜色
+$uni-bg-color: $bg-primary;
+$uni-bg-color-grey: $bg-secondary;
+$uni-bg-color-hover: $bg-tertiary;
+$uni-bg-color-mask: rgba(0, 0, 0, 0.4);
 
 /* 边框颜色 */
-$uni-border-color:#c8c7cc;
+$uni-border-color: $border-light;
 
 /* 尺寸变量 */
 
 /* 文字尺寸 */
-$uni-font-size-sm:12px;
-$uni-font-size-base:14px;
-$uni-font-size-lg:16px;
+$uni-font-size-sm: $text-sm;
+$uni-font-size-base: $text-base;
+$uni-font-size-lg: $text-lg;
 
 /* 图片尺寸 */
-$uni-img-size-sm:20px;
-$uni-img-size-base:26px;
-$uni-img-size-lg:40px;
+$uni-img-size-sm: 20px;
+$uni-img-size-base: 26px;
+$uni-img-size-lg: 40px;
 
 /* Border Radius */
-$uni-border-radius-sm: 2px;
-$uni-border-radius-base: 3px;
-$uni-border-radius-lg: 6px;
-$uni-border-radius-circle: 50%;
+$uni-border-radius-sm: $radius-sm;
+$uni-border-radius-base: $radius-md;
+$uni-border-radius-lg: $radius-lg;
+$uni-border-radius-circle: $radius-full;
 
 /* 水平间距 */
-$uni-spacing-row-sm: 5px;
-$uni-spacing-row-base: 10px;
-$uni-spacing-row-lg: 15px;
+$uni-spacing-row-sm: $spacing-2;
+$uni-spacing-row-base: $spacing-4;
+$uni-spacing-row-lg: $spacing-6;
 
 /* 垂直间距 */
-$uni-spacing-col-sm: 4px;
-$uni-spacing-col-base: 8px;
-$uni-spacing-col-lg: 12px;
+$uni-spacing-col-sm: $spacing-2;
+$uni-spacing-col-base: $spacing-4;
+$uni-spacing-col-lg: $spacing-6;
 
 /* 透明度 */
-$uni-opacity-disabled: 0.3; // 组件禁用态的透明度
+$uni-opacity-disabled: 0.3;
 
 /* 文章场景相关 */
-$uni-color-title: #2C405A; // 文章标题颜色
-$uni-font-size-title:20px;
-$uni-color-subtitle: #555555; // 二级标题颜色
-$uni-font-size-subtitle:26px;
-$uni-color-paragraph: #3F536E; // 文章段落颜色
-$uni-font-size-paragraph:15px;
+$uni-color-title: $text-primary;
+$uni-font-size-title: $text-2xl;
+$uni-color-subtitle: $text-secondary;
+$uni-font-size-subtitle: $text-lg;
+$uni-color-paragraph: $text-primary;
+$uni-font-size-paragraph: $text-base;
