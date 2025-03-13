@@ -163,5 +163,12 @@
         "navigationBarTitleText": "灵马AI",
         "navigationBarBackgroundColor": "#FFFFFF",
         "backgroundColor": "#F5F5F5"
+    },
+    "uniCloud": {
+        "tcb": {
+            "cloudEnvId": "your-env-id",
+            "provider": "tencent",
+            "spaceId": "your-space-id"
+        }
     }
 }
