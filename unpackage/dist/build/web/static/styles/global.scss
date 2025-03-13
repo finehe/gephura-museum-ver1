@@ -1,0 +1,162 @@
+// 创建全局样式文件
+:root {
+    // iOS 风格的颜色变量
+    --primary-color: #007AFF; // iOS 蓝色
+    --secondary-color: #5AC8FA; // iOS 浅蓝色
+    --success-color: #4CD964; // iOS 绿色
+    --warning-color: #FF9500; // iOS 橙色
+    --danger-color: #FF3B30; // iOS 红色
+    --background-color: #F2F2F7; // iOS 背景色
+    --card-background: #FFFFFF; // 卡片背景色
+    --text-primary: #000000; // 主要文字颜色
+    --text-secondary: #8E8E93; // 次要文字颜色
+    
+    // iOS 风格的字体大小
+    --font-size-small: 13px;
+    --font-size-normal: 15px;
+    --font-size-large: 17px;
+    --font-size-xlarge: 20px;
+    --font-size-xxlarge: 28px;
+    
+    // iOS 风格的间距
+    --spacing-xs: 4px;
+    --spacing-small: 8px;
+    --spacing-medium: 16px;
+    --spacing-large: 24px;
+    --spacing-xl: 32px;
+    
+    // iOS 风格的圆角
+    --border-radius-small: 6px;
+    --border-radius-medium: 10px;
+    --border-radius-large: 14px;
+    --border-radius-full: 999px;
+}
+
+// iOS 风格的阴影
+@mixin ios-shadow {
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+// iOS 风格的过渡效果
+@mixin ios-transition {
+    transition: all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+// 通用样式
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 16px;
+  border-radius: var(--border-radius-medium);
+  font-weight: 500;
+  background-color: var(--primary-color);
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+  
+  &:active {
+    transform: scale(0.98);
+    opacity: 0.9;
+  }
+  
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.input {
+  width: 100%;
+  height: 44px;
+  padding: 0 var(--spacing-medium);
+  font-size: var(--font-size-normal);
+  border: 1px solid #E5E5EA;
+  border-radius: var(--border-radius-small);
+  background-color: white;
+  
+  &:focus {
+    border-color: var(--primary-color);
+    outline: none;
+  }
+  
+  &:disabled {
+    background-color: #F2F2F7;
+    color: var(--text-secondary);
+  }
+}
+
+// 其他通用组件样式
+.text-primary {
+  color: var(--text-primary);
+}
+
+.text-secondary {
+  color: var(--text-secondary);
+}
+
+.text-center {
+  text-align: center;
+}
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.w-full {
+  width: 100%;
+}
+
+.h-full {
+  height: 100%;
+}
+
+.m-xs {
+  margin: var(--spacing-xs);
+}
+
+.m-sm {
+  margin: var(--spacing-small);
+}
+
+.m-md {
+  margin: var(--spacing-medium);
+}
+
+.m-lg {
+  margin: var(--spacing-large);
+}
+
+.p-xs {
+  padding: var(--spacing-xs);
+}
+
+.p-sm {
+  padding: var(--spacing-small);
+}
+
+.p-md {
+  padding: var(--spacing-medium);
+}
+
+.p-lg {
+  padding: var(--spacing-large);
+} 
