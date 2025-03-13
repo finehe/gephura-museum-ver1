@@ -12,6 +12,18 @@
   ],
   "routes": [
     {
+      "src": "/assets/(.*)",
+      "dest": "/unpackage/dist/build/web/assets/$1"
+    },
+    {
+      "src": "/static/(.*)",
+      "dest": "/unpackage/dist/build/web/static/$1"
+    },
+    {
+      "src": "/(.*\\.(js|css|png|jpg|jpeg|gif|ico|svg))",
+      "dest": "/unpackage/dist/build/web/$1"
+    },
+    {
       "src": "/(.*)",
       "dest": "/server.js"
     }
